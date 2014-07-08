@@ -252,7 +252,7 @@ class Project(Entity):
     
     def sequence (self, seq_code=None, seq_id=None ):
         '''
-        Get the scene object, either by code or by id.
+        Get the sequence object, either by code or by id.
         @param seq_code
         @param seq_id
         @return the matching seq object
@@ -334,10 +334,10 @@ class Project(Entity):
     
     def list_shots (self, sequence='all'):
         '''
-        @param scene [optional - default 'all'] return shots by scene_code, else by default will return all the shots.
+        @param sequence [optional - default 'all'] return shots by sequence_code, else by default will return all the shots.
         @rtype: [ Shot ]
         '''
-        assert sequence!=None, "Failed to list shot, no scene provided."
+        assert sequence!=None, "Failed to list shot, no sequence provided."
         
         shot_list = []
         
@@ -898,15 +898,9 @@ class Shot(Entity):
         self._seq_order     = seq_order
         self._parent_seq_id = parent_seq_id
     
-    def scene(self):
-        '''
-        @return the parent scene entity.
-        '''
-        return self.project().get_scene_from_shot(self)
-    
     def sequence(self):
         '''
-        @return the parent scene entity.
+        @return the parent sequence entity.
         '''
         return self.project().sequence(seq_id=self._parent_seq_id)        
     

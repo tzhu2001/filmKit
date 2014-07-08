@@ -40,7 +40,7 @@ class TestProdb(unittest.TestCase):
         seq_obj_by_id = self.proj.sequence( seq_id = seq.entity_id() ) 
                    
         
-        # ensure the scene return by code or by id is the same. 
+        # ensure the sequence return by code or by id is the same. 
         assert seq==seq_obj_by_id
 
     
@@ -51,12 +51,12 @@ class TestProdb(unittest.TestCase):
          
         assert result[0].entity_type() == miso.ENT_SHOT, "Failed to query all shots"
         
-        # query list shot from a scene
+        # query list shot from a sequence
         shot = self.proj.list_shots('bunny_010')[0]
         
-        assert shot.sequence().entity_code() == 'bunny_010', "Failed to query shot from scene"
+        assert shot.sequence().entity_code() == 'bunny_010', "Failed to query shot from sequence"
         
-        # list shots from scene
+        # list shots from sequence
         seq = self.proj.sequence('bunny_010')
         shot = seq.list_shots()[0]
         
@@ -228,7 +228,7 @@ READ_TEST_SUITE.addTest( TestProdb('test_list_latest_versions') )
 # ####### batch read test ########
 # BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_entities') )
 # BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_versions') )
-# BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_latest_for_scene') )
+# BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_latest_for_sequence') )
 # 
 # ####### write test ########
 # WRITE_TEST_SUITE.addTest( TestProdb('test_create_version') )

@@ -282,7 +282,7 @@ class ShotgunSession:
 
     def list_sequences(self):
         '''
-        @return list of scene objects in project
+        @return list of sequence objects in project
         @return list of search results. Each search result is a tuple ( entity_id, entity_data )
         '''
         result = self._find('Sequence',[ ('project','is',{'type':'Project','id':self._show_id} ) ],
@@ -318,11 +318,9 @@ class ShotgunSession:
     
     def list_shots(self, seq_obj):        
         '''        
-        @param scene_obj
-        @return list of shot objects that are in the scene         
+        @param sequence_obj
+        @return list of shot objects that are in the sequence         
         '''        
-        #TODO: make a better query using assets to asset relation ship, rather than just using scene code.
-        
         if seq_obj=='all':
             seq_filter = ('project', 'is', {'type':'Project','id':self._show_id} )
         else:
@@ -646,7 +644,7 @@ class ShotgunSession:
     def _cached_tasks_types(self, task_type_id ):
         '''
         Return list of task types
-        @return hash sorted by slug ex: {ENT_SCENE: {'slug':'sh','id':'93', 'name':'Shot'} }
+        @return hash 
         '''      
         if self.__cached_tasks_types==None:
             result = self._find('Task',[('task_template','is_not',None)], DB_FIELDS[ENT_TASK_TYPE])

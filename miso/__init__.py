@@ -37,7 +37,7 @@
         # list the sequence of bbb
         bbb.list_sequences() 
         
-        # get scene directly
+        # get sequence directly
         bunny_010 = bbb.sequence('bunny_010')
         
         # All entities are subclass of Entity, which uniquely identify the object within a project via: entity_type, entity_id
