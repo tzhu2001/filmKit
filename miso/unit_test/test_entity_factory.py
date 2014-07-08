@@ -108,9 +108,8 @@ class TestProdb(unittest.TestCase):
         # can also directly get the task from shot object
         assert shot_obj.list_tasks()[0].entity_id() == task_list[0].entity_id()
    
-        t = shot_obj.task(task_code='Light')
-        
-        #print 'task', t, t.department()
+        light_task = shot_obj.task('Light')
+        assert light_task!=None
         
         asset_obj = self.proj.asset('alice')
         asset_obj.list_tasks()
@@ -197,19 +196,7 @@ class TestProdb(unittest.TestCase):
         
         
         
-    def test_list_versions_from_task(self):
-        
-        shot_ver = self.proj.shot('bunny_010_0010').task('Anm').list_versions().filter(version=3) 
-     
-        assert shot_ver.task().entity_code() == 'Anm'
-        assert shot_ver.version() == 3
-        assert shot_ver.entity().entity_code() == 'bunny_010_0010' 
-          
-        asset_ver = self.proj.asset('Buck').task('Rig').list_versions().filter(version=1)
-    
-        assert asset_ver.task().entity_code() == 'Rig'
-        assert asset_ver.version() == 1
-        assert asset_ver.entity().entity_code() == 'Buck'         
+      
         
 
 
@@ -218,22 +205,22 @@ READ_TEST_SUITE = unittest.TestSuite()
 WRITE_TEST_SUITE = unittest.TestSuite()
 BATCH_READ_TEST_SUITE = unittest.TestSuite()
 
-# ####### read test ########
+####### read test ########
 READ_TEST_SUITE.addTest( TestProdb('test_list_sequences') )
-    
+     
 READ_TEST_SUITE.addTest( TestProdb('test_get_sequence') )
 READ_TEST_SUITE.addTest( TestProdb('test_list_shots') )
 READ_TEST_SUITE.addTest( TestProdb('test_get_shot') )
 READ_TEST_SUITE.addTest( TestProdb('test_get_shot_cut') )
 READ_TEST_SUITE.addTest( TestProdb('test_list_task') )
-      
+       
 READ_TEST_SUITE.addTest( TestProdb('test_get_asset') )
 READ_TEST_SUITE.addTest( TestProdb('test_list_assets') )
-  
+   
 READ_TEST_SUITE.addTest( TestProdb('test_list_task_types') )   
 READ_TEST_SUITE.addTest( TestProdb('test_list_versions') )
 READ_TEST_SUITE.addTest( TestProdb('test_list_latest_versions') )
-# READ_TEST_SUITE.addTest( TestProdb('test_list_versions_from_task') )
+
   
 # READ_TEST_SUITE.addTest( TestProdb('test_list_clips_from_version') )
 #  
