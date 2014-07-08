@@ -65,22 +65,29 @@ class ShotgunSession:
     # some measure of how efficient shotgun has been used
     __db_access_metric = {}  
      
-    def __init__(self, show, url, user, key ):
+    def __init__(self, show_config ):
         '''
         @param show show name
         @param url db web url
-        '''
-        self._url   = url 
-        self._user  = user
-        self._key   = key
-
-        self._sg = Shotgun(url, user, key)
+        '''                                            
+        self._url   = show_config['url']
+        self._admin = show_config['user']
+        self._key   = show_config['key']
+        
+        proj_name = show_config.get('name')
+        proj_code = show_config.get('code')
+        
+        # for vanilla shotgun, use name rather project code to search for project
+        self._sg = Shotgun(self._url, self._admin, self._key)
          
         # cache project
-        proj = self._find_one('Project', [('sg_code','is', show)], DB_FIELDS[ENT_PROJ] )
+        if proj_name:
+            proj = self._find_one('Project', [('name','is', proj_name)], DB_FIELDS[ENT_PROJ] )
+        else:
+            proj = self._find_one('Project', [('sg_code','is', proj_code)], DB_FIELDS[ENT_PROJ] )
     
         self._show_id       = proj['id'] 
-        self._show_code     = proj['sg_code'] 
+        self._show_code     = proj.get('sg_code', proj.get('name')) 
         self._show_label    = proj['name']  
         
         self.__cached_tasks_types  = None 

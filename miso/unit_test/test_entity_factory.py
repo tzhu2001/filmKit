@@ -14,8 +14,8 @@ class TestProdb(unittest.TestCase):
         '''
         setup the test, this is call before each test 
         '''
-        self.proj = miso.get_project('bbb')
-        logging.getLogger().setLevel(0)
+        self.proj = miso.get_project('bbb')  # project code 'bbb' for 'big buck bunny'
+        logging.getLogger().setLevel(10)
 
         
     def tearDown(self):
@@ -151,18 +151,18 @@ class TestProdb(unittest.TestCase):
         
     def test_list_versions(self):
 
-        shot_ver = self.proj.shot('bunny_010_0010').task('Anm').list_versions().filter(version=3) 
+        shot_ver = self.proj.shot('bunny_010_0010').task('Anm').list_versions().filter(version=3)[0]
     
         assert shot_ver.task().entity_code() == 'Anm'
         assert shot_ver.version() == 3
-        assert shot_ver.entity().entity_code() == 'bunny_010_0010' 
+        assert shot_ver.parent().entity_code() == 'bunny_010_0010' 
           
-        asset_ver = self.proj.asset('Buck').task('Rig').list_versions().filter(version=1)
+        asset_ver = self.proj.asset('Buck').task('Rig').list_versions().filter(version=1)[0]
     
-#         assert asset_ver.task().entity_code() == 'Rig'
-#         assert asset_ver.version() == 1
-#         assert asset_ver.entity().entity_code() == 'Buck'    
-#           
+        assert asset_ver.task().entity_code() == 'Rig'
+        assert asset_ver.version() == 1
+        assert asset_ver.parent().entity_code() == 'Buck'    
+
 
     def test_list_latest_versions(self):
         latest_result = self.proj.shot('bunny_150_0200').list_versions(latest_only=True)
@@ -173,7 +173,7 @@ class TestProdb(unittest.TestCase):
         # different way to get the latest
         anm_latest_ver = self.proj.shot('bunny_150_0200').task('Anm').latest_version()
         
-        assert anm_latest_ver.version() == latest_result.filter(task_code='Anm').version()
+        assert anm_latest_ver.version() == latest_result.filter(task_code='Anm')[0].version()
         
 
     def test_batch_list_versions(self):
@@ -214,67 +214,25 @@ class TestProdb(unittest.TestCase):
 
 
 
-    
-    
-    def test_list_shot_parent(self):
-        
-        parent_scene = self.proj.get_shot('sc1040-sh57401').list_parents()
-        
-        assert parent_scene[0].entity_code() == 'sc1040' 
-        
-
-    def test_list_assets_parent(self):
-        
-        # get the asset
-        paper = self.tlp_prod.get_asset('sc0044-sh07318-paper-a-1')
-        
-        # get the parent shot
-        parent_shot = paper.list_parents( entity_type = miso.ENT_SHOT )[0]
-        
-        assert parent_shot.entity_code() == 'sc0044-sh07318'
-        
-        # get the shot latest versions for 'std' and 'fx'
-        std_latest_version = parent_shot.get_task('std').get_latest_version()
-        fx_latest_version = parent_shot.get_task('fx').get_latest_version()
-        
-        assert std_latest_version.entity_type() == miso.ENT_VERSION
-        print " std version number: %s" % std_latest_version.number()  
-
-        assert fx_latest_version.entity_type() == miso.ENT_VERSION
-        print " fx version number: %s" % fx_latest_version.number()
-        
-        # list all the fx asset for shot         
-        shot_fx_children = parent_shot.list_children( entity_type=miso.ENT_FX )
-        
-        # get the latest versions 
-        for shot_fx in shot_fx_children:
-            print 'shot children fx code: %s   -  version: %s' % (
-                                                                 shot_fx.entity_code(), 
-                                                                 shot_fx.get_task('fx').get_latest_version().number()
-                                                                 )
-              
-
-
 READ_TEST_SUITE = unittest.TestSuite()
 WRITE_TEST_SUITE = unittest.TestSuite()
 BATCH_READ_TEST_SUITE = unittest.TestSuite()
 
 # ####### read test ########
-# READ_TEST_SUITE.addTest( TestProdb('test_list_sequences') )
-#    
-# READ_TEST_SUITE.addTest( TestProdb('test_get_sequence') )
-# READ_TEST_SUITE.addTest( TestProdb('test_list_shots') )
-# READ_TEST_SUITE.addTest( TestProdb('test_get_shot') )
-# READ_TEST_SUITE.addTest( TestProdb('test_get_shot_cut') )
-# READ_TEST_SUITE.addTest( TestProdb('test_list_task') )
-#      
-# READ_TEST_SUITE.addTest( TestProdb('test_get_asset') )
-# READ_TEST_SUITE.addTest( TestProdb('test_list_assets') )
-#  
-#  
-# READ_TEST_SUITE.addTest( TestProdb('test_list_task_types') )   
-# READ_TEST_SUITE.addTest( TestProdb('test_list_versions') )
-# READ_TEST_SUITE.addTest( TestProdb('test_list_latest_versions') )
+READ_TEST_SUITE.addTest( TestProdb('test_list_sequences') )
+    
+READ_TEST_SUITE.addTest( TestProdb('test_get_sequence') )
+READ_TEST_SUITE.addTest( TestProdb('test_list_shots') )
+READ_TEST_SUITE.addTest( TestProdb('test_get_shot') )
+READ_TEST_SUITE.addTest( TestProdb('test_get_shot_cut') )
+READ_TEST_SUITE.addTest( TestProdb('test_list_task') )
+      
+READ_TEST_SUITE.addTest( TestProdb('test_get_asset') )
+READ_TEST_SUITE.addTest( TestProdb('test_list_assets') )
+  
+READ_TEST_SUITE.addTest( TestProdb('test_list_task_types') )   
+READ_TEST_SUITE.addTest( TestProdb('test_list_versions') )
+READ_TEST_SUITE.addTest( TestProdb('test_list_latest_versions') )
 # READ_TEST_SUITE.addTest( TestProdb('test_list_versions_from_task') )
   
 # READ_TEST_SUITE.addTest( TestProdb('test_list_clips_from_version') )
@@ -282,7 +240,7 @@ BATCH_READ_TEST_SUITE = unittest.TestSuite()
 #   
 # ####### batch read test ########
 # BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_entities') )
-BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_versions') )
+# BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_versions') )
 # BATCH_READ_TEST_SUITE.addTest( TestProdb('test_batch_list_latest_for_scene') )
 # 
 # ####### write test ########

@@ -5,6 +5,7 @@ url, user, key = [ t.strip() for t in open(r'C:\tmp\shotgun_conn\shotgun_conn.tx
 prod_db_conn_param = {
                       ('bbb','prod'):{
                                         'type': 'shotgun',
+                                        'name': 'Big Buck Bunny',
                                         'url':  url,
                                         'user': user,
                                         'key':  key,

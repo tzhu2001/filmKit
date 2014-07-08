@@ -140,10 +140,7 @@ def _create_project_session(show, flg_dev):
 
     if prod_db_type == 'shotgun':      
         from miso.pdb_plugins import shotgun_session            
-        prod_db_conn = shotgun_session.ShotgunSession( show, 
-                                                       config.prod_db_conn_param[(show, dev_type)]['url'],
-                                                       config.prod_db_conn_param[(show, dev_type)]['user'],
-                                                       config.prod_db_conn_param[(show, dev_type)]['key'] )
+        prod_db_conn = shotgun_session.ShotgunSession( config.prod_db_conn_param[(show, dev_type)] )
         
         import entity_factory
         return entity_factory.Project( prod_db_conn )
